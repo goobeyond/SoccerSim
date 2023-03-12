@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using SoccerSim.Domain.Services;
 using SoccerSim.Infrastructure;
+using SoccerSim.Infrastructure.Repositories;
 
 namespace SoccerSim
 {
@@ -19,6 +21,9 @@ namespace SoccerSim
                options
                 .UseSqlite(@"Data Source=SoccerSim.db")
                );
+
+            builder.Services.AddScoped<ITeamService, TeamService>();
+            builder.Services.AddScoped<IRepository, Repository>();
 
             var app = builder.Build();
 
