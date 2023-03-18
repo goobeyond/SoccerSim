@@ -8,10 +8,10 @@ using SoccerSim.Infrastructure;
 
 #nullable disable
 
-namespace SoccerSim.Infrastructure.Migrations
+namespace soccersim.infrastructure.Migrations
 {
     [DbContext(typeof(SoccerSimContext))]
-    [Migration("20230312113720_SetupDatabase")]
+    [Migration("20230318125110_SetupDatabase")]
     partial class SetupDatabase
     {
         /// <inheritdoc />
@@ -25,18 +25,6 @@ namespace SoccerSim.Infrastructure.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
-
-                    b.Property<Guid>("Team1")
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("Team2")
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("Team3")
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("Team4")
-                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -55,7 +43,7 @@ namespace SoccerSim.Infrastructure.Migrations
                     b.Property<Guid>("AwayTeam")
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("Draw")
+                    b.Property<bool?>("Draw")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("GroupId")
@@ -67,7 +55,7 @@ namespace SoccerSim.Infrastructure.Migrations
                     b.Property<Guid>("HomeTeam")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("Winner")
+                    b.Property<Guid?>("Winner")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -119,7 +107,7 @@ namespace SoccerSim.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("GroupId");
+                    b.HasIndex("GroupId", "TeamName");
 
                     b.ToTable("Standings");
                 });
@@ -136,6 +124,9 @@ namespace SoccerSim.Infrastructure.Migrations
                     b.Property<int>("Def")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int?>("GroupId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("Mid")
                         .HasColumnType("INTEGER");
 
@@ -144,6 +135,8 @@ namespace SoccerSim.Infrastructure.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("GroupId");
 
                     b.ToTable("Teams");
                 });
@@ -168,11 +161,20 @@ namespace SoccerSim.Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("SoccerSim.Infrastructure.Models.Team", b =>
+                {
+                    b.HasOne("SoccerSim.Infrastructure.Models.Group", null)
+                        .WithMany("Teams")
+                        .HasForeignKey("GroupId");
+                });
+
             modelBuilder.Entity("SoccerSim.Infrastructure.Models.Group", b =>
                 {
                     b.Navigation("Matches");
 
                     b.Navigation("Standings");
+
+                    b.Navigation("Teams");
                 });
 #pragma warning restore 612, 618
         }

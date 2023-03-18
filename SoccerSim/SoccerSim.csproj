@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SoccerSim.Domain\SoccerSim.Domain.csproj" />
+    <ProjectReference Include="..\SoccerSim.Application\SoccerSim.Application.csproj" />
     <ProjectReference Include="..\SoccerSim.Infrastructure\SoccerSim.Infrastructure.csproj" />
   </ItemGroup>
 

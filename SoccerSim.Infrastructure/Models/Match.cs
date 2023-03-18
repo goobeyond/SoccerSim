@@ -12,9 +12,9 @@ namespace SoccerSim.Infrastructure.Models
         public Group Group { get; set; }
         public Guid HomeTeam { get; set; }
         public Guid AwayTeam { get; set; }
-        public Guid Winner { get; set; }
-        public bool Draw { get; set; }
-        public int HomeScore { get; set; }
-        public int AwayScore { get; set; }
+        public Guid? Winner { get; set; }
+        public bool? Draw { get; set; }
+        public int HomeScore { get; set; } = 0;
+        public int AwayScore { get; set; } = 0;
     }
 }

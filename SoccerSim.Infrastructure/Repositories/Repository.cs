@@ -22,5 +22,12 @@ namespace SoccerSim.Infrastructure.Repositories
         {
             return await _context.Teams.OrderBy(x => x.Name).ToListAsync();
         }
+
+        public async Task<IEnumerable<Standing>> GetStandings(int groupId)
+        {
+           //var query = new StringBuilder();
+           return new List<Standing>();
+            
+        }
     }
 }

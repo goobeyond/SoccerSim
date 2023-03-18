@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace SoccerSim.Infrastructure.Migrations
+namespace soccersim.infrastructure.Migrations
 {
     /// <inheritdoc />
     public partial class SetupDatabase : Migration
@@ -16,30 +16,11 @@ namespace SoccerSim.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Team1 = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Team2 = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Team3 = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Team4 = table.Column<Guid>(type: "TEXT", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Groups", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Teams",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Name = table.Column<string>(type: "TEXT", nullable: false),
-                    Att = table.Column<int>(type: "INTEGER", nullable: false),
-                    Def = table.Column<int>(type: "INTEGER", nullable: false),
-                    Mid = table.Column<int>(type: "INTEGER", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Teams", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -51,8 +32,8 @@ namespace SoccerSim.Infrastructure.Migrations
                     GroupId = table.Column<int>(type: "INTEGER", nullable: false),
                     HomeTeam = table.Column<Guid>(type: "TEXT", nullable: false),
                     AwayTeam = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Winner = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Draw = table.Column<bool>(type: "INTEGER", nullable: false),
+                    Winner = table.Column<Guid>(type: "TEXT", nullable: true),
+                    Draw = table.Column<bool>(type: "INTEGER", nullable: true),
                     HomeScore = table.Column<int>(type: "INTEGER", nullable: false),
                     AwayScore = table.Column<int>(type: "INTEGER", nullable: false)
                 },
@@ -95,14 +76,40 @@ namespace SoccerSim.Infrastructure.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Teams",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    Att = table.Column<int>(type: "INTEGER", nullable: false),
+                    Def = table.Column<int>(type: "INTEGER", nullable: false),
+                    Mid = table.Column<int>(type: "INTEGER", nullable: false),
+                    GroupId = table.Column<int>(type: "INTEGER", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Teams", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Teams_Groups_GroupId",
+                        column: x => x.GroupId,
+                        principalTable: "Groups",
+                        principalColumn: "Id");
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Matches_GroupId",
                 table: "Matches",
                 column: "GroupId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Standings_GroupId",
+                name: "IX_Standings_GroupId_TeamName",
                 table: "Standings",
+                columns: new[] { "GroupId", "TeamName" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Teams_GroupId",
+                table: "Teams",
                 column: "GroupId");
         }
 

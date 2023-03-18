@@ -7,11 +7,11 @@ namespace SoccerSim.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TeamController : ControllerBase
+    public class GroupController : ControllerBase
     {
         private readonly ITeamService _teamService;
 
-        public TeamController(ITeamService teamService)
+        public GroupController(ITeamService teamService)
         {
             _teamService = teamService;
         }

@@ -12,13 +12,13 @@ namespace SoccerSim.Infrastructure.Models
         public int GroupId { get; set; }
         public string TeamName { get; set; }
         public int Rank { get; set; }
-        public int Played { get; set; }
-        public int Win { get; set; }
-        public int Draw { get; set; }
-        public int Loss { get; set; }
-        public int For { get; set; }
-        public int Against { get; set; }
-        public int Diff { get; set; }
-        public int Points { get; set; }
+        public int Played { get; set; } = 0;
+        public int Win { get; set; } = 0;
+        public int Draw { get; set; } = 0;
+        public int Loss { get; set; } = 0;
+        public int For { get; set; } = 0;
+        public int Against { get; set; } = 0;
+        public int Diff { get; set; } = 0;
+        public int Points { get; set; } = 0;
     }
 }

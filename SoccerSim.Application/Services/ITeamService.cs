@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SoccerSim.Domain.Services
+namespace SoccerSim.Application.Services
 {
     public interface ITeamService
     {
