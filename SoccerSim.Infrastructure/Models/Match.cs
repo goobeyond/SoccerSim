@@ -9,7 +9,7 @@ namespace SoccerSim.Infrastructure.Models
     public class Match
     {
         public int Id { get; set; }
-        public Group Group { get; set; }
+        public int GroupId { get; set; }
         public Guid HomeTeam { get; set; }
         public Guid AwayTeam { get; set; }
         public Guid? Winner { get; set; }

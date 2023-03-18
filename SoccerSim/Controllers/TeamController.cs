@@ -5,7 +5,7 @@ using SoccerSim.Application.Services;
 
 namespace SoccerSim.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class TeamController : ControllerBase
     {

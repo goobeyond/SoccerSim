@@ -140,13 +140,11 @@ namespace soccersim.infrastructure.Migrations
 
             modelBuilder.Entity("SoccerSim.Infrastructure.Models.Match", b =>
                 {
-                    b.HasOne("SoccerSim.Infrastructure.Models.Group", "Group")
+                    b.HasOne("SoccerSim.Infrastructure.Models.Group", null)
                         .WithMany("Matches")
                         .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Group");
                 });
 
             modelBuilder.Entity("SoccerSim.Infrastructure.Models.Standing", b =>

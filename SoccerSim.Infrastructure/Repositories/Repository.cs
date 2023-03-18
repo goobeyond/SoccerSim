@@ -23,11 +23,31 @@ namespace SoccerSim.Infrastructure.Repositories
             return await _context.Teams.OrderBy(x => x.Name).ToListAsync();
         }
 
-        public async Task<IEnumerable<Standing>> GetStandings(int groupId)
+        public async Task<Group?> GetGroupById(int groupId)
         {
-           //var query = new StringBuilder();
-           return new List<Standing>();
-            
+            return await _context.Groups
+                .Include(x => x.Teams)
+                .Include(x => x.Matches)
+                .Include(x => x.Standings)
+                .FirstOrDefaultAsync(x => x.Id == groupId);
+        }
+
+        public async Task UpdateGroupAsync(Group group)
+        {
+            _context.Update(group);
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<Standing>> GetRankedStandingsAsync(int groupId)
+        {
+            var sql = @"SELECT *,
+                        RANK() OVER (ORDER BY Points DESC) AS Rank_1
+                        FROM Standings";
+
+            var result = await _context.Database.ExecuteSqlRawAsync(sql);
+
+            return (IEnumerable<Standing>)Task.FromResult(new List<Standing>());
         }
     }
 }

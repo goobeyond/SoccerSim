@@ -31,8 +31,8 @@ namespace SoccerSim.Infrastructure
             modelBuilder.Entity<Team>()
                 .HasKey(x => x.Id);
 
-            modelBuilder.Entity<Match>()
-                .HasOne(x => x.Group);
+            modelBuilder.Entity<Group>()
+                .HasMany(x => x.Teams);
 
             modelBuilder.Entity<Group>()
                 .HasMany(x => x.Matches);

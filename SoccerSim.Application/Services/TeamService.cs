@@ -16,6 +16,16 @@ namespace SoccerSim.Application.Services
             _repository = repository;
         }
 
+        public async Task<Group?> GetGroupAsync(int groupId)
+        {
+            return await _repository.GetGroupById(groupId);
+        }
+
+        public async Task<IEnumerable<Standing>> GetStandings(int groupId)
+        {
+            return await _repository.GetRankedStandingsAsync(groupId);
+        }
+
         public async Task<IEnumerable<Team>> GetTeamsAsync()
         {
             return await _repository.GetTeamsAsync();

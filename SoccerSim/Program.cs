@@ -26,6 +26,7 @@ namespace SoccerSim
                );
 
             builder.Services.AddScoped<ITeamService, TeamService>();
+            builder.Services.AddScoped<ISimulationService, SimulationService>();
             builder.Services.AddScoped<IRepository, Repository>();
 
             var app = builder.Build();
