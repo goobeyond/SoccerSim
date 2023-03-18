@@ -10,6 +10,6 @@ namespace SoccerSim.Application.Services
 {
     public interface ISimulationService
     {
-        public Task<MatchResult> OrchestrateGroupMatchSimulation(int groupId, string homeTeamName, string awayTeamName);
+        public Task<MatchResult> OrchestrateGroupMatchSimulation(int groupId, string teamNameA, string teamNameB);
     }
 }

@@ -25,6 +25,7 @@ namespace SoccerSim
                 .UseSqlite(@"Data Source=SoccerSim.db")
                );
 
+            builder.Services.AddScoped<IGroupService, GroupService>();
             builder.Services.AddScoped<ITeamService, TeamService>();
             builder.Services.AddScoped<ISimulationService, SimulationService>();
             builder.Services.AddScoped<IRepository, Repository>();

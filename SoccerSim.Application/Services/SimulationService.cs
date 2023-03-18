@@ -29,7 +29,17 @@ namespace SoccerSim.Application.Services
 
             var result = SimulateGame(homeTeam, awayTeam);
 
-            var match = group.Matches.First(x => x.HomeTeam == homeTeam.Id && x.AwayTeam == awayTeam.Id);
+            var match = group.Matches.FirstOrDefault(x => x.HomeTeam == homeTeam.Id && x.AwayTeam == awayTeam.Id && x.Draw is null);
+
+            if (match is null)
+            {
+                match = group.Matches.FirstOrDefault(x => x.HomeTeam == awayTeam.Id && x.AwayTeam == homeTeam.Id && x.Draw is null);
+            }
+
+            if (match is null)
+            {
+                throw new Exception("Either one of the teams doesn't exist or match has already been played.");
+            }
             
             var homeStanding = group.Standings.First(x => x.TeamName == homeTeam.Name);
             var awayStanding = group.Standings.First(x => x.TeamName == awayTeam.Name);
@@ -82,11 +92,25 @@ namespace SoccerSim.Application.Services
 
         public MatchResult SimulateGame(Team home, Team away)
         {
-            return new MatchResult()
+            Random rand = new Random();
+            var value = rand.Next(0, 100);
+
+            if (value %2 == 0)
             {
-                HomeScore = 3,
-                AwayScore = 2,
-            };
+                return new MatchResult()
+                {
+                    HomeScore = 1,
+                    AwayScore = 1,
+                };
+            }
+            else
+            {
+                return new MatchResult()
+                {
+                    HomeScore = 3,
+                    AwayScore = 1,
+                };
+            }
         }
 
         private async Task<Group> GetGroup(int groupId)

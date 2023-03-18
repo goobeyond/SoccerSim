@@ -9,10 +9,10 @@ namespace SoccerSim.Controllers
     [ApiController]
     public class GroupController : ControllerBase
     {
-        private readonly ITeamService _teamService;
+        private readonly IGroupService _teamService;
         private readonly ISimulationService _simService;
 
-        public GroupController(ITeamService teamService, ISimulationService simService)
+        public GroupController(IGroupService teamService, ISimulationService simService)
         {
             _teamService = teamService;
             _simService = simService;
@@ -31,9 +31,9 @@ namespace SoccerSim.Controllers
         }
 
         [HttpPost("{groupId}/simulate")]
-        public async Task<IActionResult> SimulateMatch(int groupId, string homeTeamName, string awayTeamName)
+        public async Task<IActionResult> SimulateMatch(int groupId, string teamNameA, string teamNameB)
         {
-            return Ok(await _simService.OrchestrateGroupMatchSimulation(groupId, homeTeamName, awayTeamName));
+            return Ok(await _simService.OrchestrateGroupMatchSimulation(groupId, teamNameA, teamNameB));
         }
     }
 }

@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 
 namespace SoccerSim.Application.Services
 {
-    public interface ITeamService
+    public interface IGroupService
     {
-        Task<IEnumerable<Team>> GetTeamsAsync();
+        Task<Group?> GetGroupAsync(int groupId);
+        Task<IEnumerable<Standing>> GetStandings(int groupId);
     }
 }

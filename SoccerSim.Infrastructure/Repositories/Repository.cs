@@ -41,13 +41,14 @@ namespace SoccerSim.Infrastructure.Repositories
 
         public async Task<IEnumerable<Standing>> GetRankedStandingsAsync(int groupId)
         {
-            var sql = @"SELECT *,
-                        RANK() OVER (ORDER BY Points DESC) AS Rank_1
-                        FROM Standings";
+            FormattableString sqlraw = @$"SELECT Id, GroupId, TeamName, Played, Win, Draw, Loss, For, Against, Diff, Points, 
+                                            RANK() OVER (ORDER BY Points DESC, Diff DESC, `For` DESC, Against ASC) AS Rank 
+                                        FROM Standings WHERE GroupId = {groupId};";
 
-            var result = await _context.Database.ExecuteSqlRawAsync(sql);
 
-            return (IEnumerable<Standing>)Task.FromResult(new List<Standing>());
+            var result = _context.Standings.FromSql(sqlraw).ToList();
+
+            return result;
         }
     }
 }
