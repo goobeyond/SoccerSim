@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OpenApi.Models;
 using SoccerSim.Application.Services;
 using SoccerSim.Infrastructure;
 using SoccerSim.Infrastructure.Models;
@@ -30,14 +31,32 @@ namespace SoccerSim
             builder.Services.AddScoped<ISimulationService, SimulationService>();
             builder.Services.AddScoped<IRepository, Repository>();
 
+            builder.Services.AddSwaggerGen(o =>
+            {
+                o.SwaggerDoc("v1",
+                    new OpenApiInfo
+                    {
+                        Title = "SoccerSim",
+                        Description = "API's to simulate a soccer match!",
+                        Version = "v1",
+                        TermsOfService = null,
+                        Contact = new OpenApiContact
+                        {
+                            // Check for optional parameters
+                        },
+                    });
+                var filePath = Path.Combine(AppContext.BaseDirectory, "SoccerSim.xml");
+                o.IncludeXmlComments(filePath);
+            });
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
+
+
+            app.UseSwagger();
+            app.UseSwaggerUI();
+
 
             using (var scope = app.Services.CreateScope())
             {

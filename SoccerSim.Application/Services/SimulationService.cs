@@ -13,6 +13,7 @@ namespace SoccerSim.Application.Services
     public class SimulationService : ISimulationService
     {
         private readonly IRepository _repository;
+
         public SimulationService(IRepository repository)
         {
             _repository = repository;
@@ -22,51 +23,70 @@ namespace SoccerSim.Application.Services
         {
             var group = await GetGroup(groupId);
 
-            int homePoints = 0, awayPoints = 0;
-
             var homeTeam = group.Teams.First(x => x.Name == homeTeamName);
             var awayTeam = group.Teams.First(x => x.Name == awayTeamName);
 
+            var match = group.Matches.FirstOrDefault(x => ((x.HomeTeam == homeTeam.Id && x.AwayTeam == awayTeam.Id) 
+                    || (x.HomeTeam == awayTeam.Id && x.AwayTeam == homeTeam.Id))
+                    && x.Draw is null);
+
+            if (match is null)
+            {
+                throw new InvalidOperationException("Match has already been played.");
+            }
+
+            // redo team identification in case the positions were swapped 
+            // when finding match.
+            homeTeam = group.Teams.First(x => x.Id == match.HomeTeam);
+            awayTeam = group.Teams.First(x => x.Id == match.AwayTeam);
+
             var result = SimulateGame(homeTeam, awayTeam);
 
-            var match = group.Matches.FirstOrDefault(x => x.HomeTeam == homeTeam.Id && x.AwayTeam == awayTeam.Id && x.Draw is null);
-
-            if (match is null)
-            {
-                match = group.Matches.FirstOrDefault(x => x.HomeTeam == awayTeam.Id && x.AwayTeam == homeTeam.Id && x.Draw is null);
-            }
-
-            if (match is null)
-            {
-                throw new Exception("Either one of the teams doesn't exist or match has already been played.");
-            }
-            
             var homeStanding = group.Standings.First(x => x.TeamName == homeTeam.Name);
             var awayStanding = group.Standings.First(x => x.TeamName == awayTeam.Name);
+            
+            UpdateStandings(homeTeam, awayTeam, result, match, homeStanding, awayStanding);
 
-            match.HomeScore = result.HomeScore;
-            match.AwayScore = result.AwayScore;
+            await _repository.UpdateGroupAsync(group);
+            return result;
+        }
+
+        public async Task<MatchResult> OrchestrateSingleMatchSimulation(string homeTeamName, string awayTeamName)
+        {
+            var teams = await _repository.GetTeamsAsync();
+            var homeTeam = teams.First(x => x.Name == homeTeamName);
+            var awayTeam = teams.First(x => x.Name == awayTeamName);
+
+            return SimulateGame(homeTeam, awayTeam);
+        }
+
+        private void UpdateStandings(Team homeTeam, Team awayTeam, MatchResult result, Match match, Standing homeStanding, Standing awayStanding)
+        {
+            int homePoints = 0, awayPoints = 0;
+
+            match.HomeScore = result.TeamAScore;
+            match.AwayScore = result.TeamBScore;
             match.Draw = false;
 
             homeStanding.Played++;
-            homeStanding.For += result.HomeScore;
-            homeStanding.Against += result.AwayScore;
+            homeStanding.For += result.TeamAScore;
+            homeStanding.Against += result.TeamBScore;
             homeStanding.Diff = homeStanding.For - homeStanding.Against;
 
             awayStanding.Played++;
-            awayStanding.For += result.HomeScore;
-            awayStanding.Against += result.AwayScore;
+            awayStanding.For += result.TeamBScore;
+            awayStanding.Against += result.TeamAScore;
             awayStanding.Diff = awayStanding.For - awayStanding.Against;
 
 
-            if (result.HomeScore > result.AwayScore)
+            if (result.TeamAScore > result.TeamBScore)
             {
                 match.Winner = homeTeam.Id;
                 homeStanding.Win++;
                 awayStanding.Loss++;
                 homePoints = 3;
             }
-            else if (result.HomeScore < result.AwayScore)
+            else if (result.TeamAScore < result.TeamBScore)
             {
                 match.Winner = awayTeam.Id;
                 awayStanding.Win++;
@@ -84,33 +104,39 @@ namespace SoccerSim.Application.Services
 
             homeStanding.Points += homePoints;
             awayStanding.Points += awayPoints;
-
-            await _repository.UpdateGroupAsync(group);
-            return result;
         }
 
-
-        public MatchResult SimulateGame(Team home, Team away)
+        private MatchResult SimulateGame(Team home, Team away)
         {
-            Random rand = new Random();
-            var value = rand.Next(0, 100);
+            int homeScore = CalculateScore(home, away);
+            int awayScore = CalculateScore(away, home);
 
-            if (value %2 == 0)
+            return new MatchResult()
             {
-                return new MatchResult()
-                {
-                    HomeScore = 1,
-                    AwayScore = 1,
-                };
-            }
-            else
+                TeamAScore = homeScore,
+                TeamBScore = awayScore,
+            };
+        }
+
+        private int CalculateScore(Team attacker, Team defender)
+        {
+            var random = new Random((int)DateTime.Now.Ticks);
+            int score = 0;
+            
+            // from a max difference of 10 to -10, we have a range of 20 so we divide by 20
+            // to convert the chance to integer, we multiply by 10, so in the end, we divide by 2
+            var chanceToScore = (10 + attacker.Att - defender.Def) / 2; 
+
+            for (int i = 0; i < attacker.Mid; i++) // we consider the Mid score as the number of attempts on goal
             {
-                return new MatchResult()
+                var outcome = random.Next(0, 11);
+                if (outcome <= chanceToScore)
                 {
-                    HomeScore = 3,
-                    AwayScore = 1,
-                };
+                    score++;
+                }
             }
+
+            return score;
         }
 
         private async Task<Group> GetGroup(int groupId)
