@@ -9,6 +9,9 @@ For the sake of simplicity, the teams, group and matches are hardcoded into the 
 
 The application is written with dotnet 6 and uses a SQLite database to store data. 
 
+## Group
+There's only one group and the ID is 1.
+
 ## Team
 A team is broken down into 3 parameters: Attack, Defence and Midfield.
 The attack and defence metrics are used to determine the chance of scoring a goal for that team. The midfield stat determines the number of goal attempts a team makes.
