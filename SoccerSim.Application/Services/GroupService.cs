@@ -24,15 +24,16 @@ namespace SoccerSim.Application.Services
 
         public async Task<IEnumerable<NamedStanding>> GetStandingsAsync(int groupId)
         {
-            var rankedStanding = await _repository.GetRankedStandingsAsync(groupId);
+            var teamStandings = await _repository.GetRankedStandingsAsync(groupId);
 
-            if (rankedStanding.Count == 0) 
+            if (teamStandings.Count == 0)
             {
                 throw new Exception("Group doesn't exist.");
             }
 
-            var flattened = rankedStanding.Select(x =>
-                                                new NamedStanding() {
+            var namedStandings = teamStandings.Select(x =>
+                                                new NamedStanding()
+                                                {
                                                     TeamName = x.Key,
                                                     Against = x.Value.Against,
                                                     Diff = x.Value.Diff,
@@ -48,40 +49,43 @@ namespace SoccerSim.Application.Services
                                                 })
                                             .ToList();
 
-            var sameRanks = flattened
-                .GroupBy(x => x.Rank)
-                .Where(x => x.Count() > 1);
+            var groupsWithSameRank = namedStandings
+                        .GroupBy(x => x.Rank)
+                        .Where(x => x.Count() > 1);
 
-            if (sameRanks.Count() == 1 && sameRanks.First().Count() == 4) // all teams ranked the same
+            if (AllTeamsHaveSameRank(groupsWithSameRank))
             {
                 for (int i = 0; i < 4; i++)
                 {
-                    flattened.ElementAt(i).Rank += i;
+                    namedStandings.ElementAt(i).Rank += i;
                 }
 
-                return flattened.OrderBy(x => x.Rank);
+                return namedStandings.OrderBy(x => x.Rank);
             }
 
-            foreach (var group in sameRanks)
+            foreach (var group in groupsWithSameRank)
             {
                 var teams = group.Select(x => x.TeamId).ToArray();
 
                 var headToHeadResult = await _repository.GetMatchResultAsync(teams[0], teams[1]);
 
-                if (headToHeadResult is not null && headToHeadResult.Winner.HasValue) 
+                if (headToHeadResult is not null && headToHeadResult.Winner.HasValue)
                 {
                     var loser = group.First(x => x.TeamId != headToHeadResult.Winner);
-                    flattened.First(x => x.TeamId == loser.TeamId).Rank++;
+                    namedStandings.First(x => x.TeamId == loser.TeamId).Rank++;
                 }
                 else
                 {
-                    flattened.First(x => x.TeamId == teams[0]).Rank++; // if the teams have not played or they had a draw, just add a rank to one of them randomly.
+                    namedStandings.First(x => x.TeamId == teams[0]).Rank++; // if the teams have not played or they had a draw, just add a rank to one of them randomly.
                 }
             }
 
-
-            return flattened.OrderBy(x => x.Rank);
+            return namedStandings.OrderBy(x => x.Rank);
         }
 
+        private bool AllTeamsHaveSameRank(IEnumerable<IGrouping<int, NamedStanding>> sameRanks)
+        {
+            return sameRanks.Count() == 1 && sameRanks.First().Count() == 4;
+        }
     }
 }
