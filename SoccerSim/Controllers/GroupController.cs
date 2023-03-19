@@ -42,7 +42,7 @@ namespace SoccerSim.Controllers
         }
 
         /// <summary>
-        /// Simlate a match between two teams is a Group.
+        /// Simlate a match between two teams in a Group.
         /// </summary>
         /// <param name="groupId"></param>
         /// <param name="teamNameA"></param>

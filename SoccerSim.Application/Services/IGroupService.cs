@@ -1,4 +1,5 @@
-﻿using SoccerSim.Infrastructure.Models;
+﻿using SoccerSim.Application.Models;
+using SoccerSim.Infrastructure.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,6 @@ namespace SoccerSim.Application.Services
     public interface IGroupService
     {
         Task<Group?> GetGroupAsync(int groupId);
-        Task<IEnumerable<Standing>> GetStandings(int groupId);
+        Task<IEnumerable<NamedStanding>> GetStandings(int groupId);
     }
 }

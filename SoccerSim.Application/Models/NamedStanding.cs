@@ -1,14 +1,15 @@
-﻿using System;
+﻿using SoccerSim.Infrastructure.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SoccerSim.Infrastructure.Models
+namespace SoccerSim.Application.Models
 {
-    public class Standing
+    public class NamedStanding 
     {
-        public Guid Id { get; set; }
+        public string TeamName { get; set; }
         public int GroupId { get; set; }
         public Guid TeamId { get; set; }
         public int Rank { get; set; }

@@ -1,5 +1,4 @@
-﻿using SoccerSim.Application.Dtos;
-using SoccerSim.Application.Models;
+﻿using SoccerSim.Application.Models;
 using SoccerSim.Infrastructure.Models;
 using SoccerSim.Infrastructure.Repositories;
 using System;
@@ -42,8 +41,8 @@ namespace SoccerSim.Application.Services
 
             var result = SimulateGame(homeTeam, awayTeam);
 
-            var homeStanding = group.Standings.First(x => x.TeamName == homeTeam.Name);
-            var awayStanding = group.Standings.First(x => x.TeamName == awayTeam.Name);
+            var homeStanding = group.Standings.First(x => x.TeamId == homeTeam.Id);
+            var awayStanding = group.Standings.First(x => x.TeamId == awayTeam.Id);
             
             UpdateStandings(homeTeam, awayTeam, result, match, homeStanding, awayStanding);
 
@@ -120,23 +119,25 @@ namespace SoccerSim.Application.Services
 
         private int CalculateScore(Team attacker, Team defender)
         {
-            var random = new Random((int)DateTime.Now.Ticks);
-            int score = 0;
-            
-            // from a max difference of 10 to -10, we have a range of 20 so we divide by 20
-            // to convert the chance to integer, we multiply by 10, so in the end, we divide by 2
-            var chanceToScore = (10 + attacker.Att - defender.Def) / 2; 
+            //var random = new Random((int)DateTime.Now.Ticks);
+            //int score = 0;
 
-            for (int i = 0; i < attacker.Mid; i++) // we consider the Mid score as the number of attempts on goal
-            {
-                var outcome = random.Next(0, 11);
-                if (outcome <= chanceToScore)
-                {
-                    score++;
-                }
-            }
+            //// from a max difference of 10 to -10, we have a range of 20 so we divide by 20
+            //// to convert the chance to integer, we multiply by 10, so in the end, we divide by 2
+            //var chanceToScore = (10 + attacker.Att - defender.Def) / 2; 
 
-            return score;
+            //for (int i = 0; i < attacker.Mid; i++) // we consider the Mid score as the number of attempts on goal
+            //{
+            //    var outcome = random.Next(0, 11);
+            //    if (outcome <= chanceToScore)
+            //    {
+            //        score++;
+            //    }
+            //}
+
+            //return score;
+
+            return 1;
         }
 
         private async Task<Group> GetGroup(int groupId)

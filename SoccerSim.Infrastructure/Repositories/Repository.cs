@@ -32,6 +32,11 @@ namespace SoccerSim.Infrastructure.Repositories
                 .FirstOrDefaultAsync(x => x.Id == groupId);
         }
 
+        public async Task<Match?> GetMatchResultAsync(Guid team1, Guid team2)
+        {
+            return await _context.Matches.FirstOrDefaultAsync(x => (x.HomeTeam == team1 && x.AwayTeam == team2) || (x.HomeTeam == team2 && x.AwayTeam == team1));
+        }
+
         public async Task UpdateGroupAsync(Group group)
         {
             _context.Update(group);
@@ -39,14 +44,24 @@ namespace SoccerSim.Infrastructure.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<Standing>> GetRankedStandingsAsync(int groupId)
+        public async Task<IDictionary<string, Standing>> GetRankedStandingsAsync(int groupId)
         {
-            FormattableString sqlraw = @$"SELECT Id, GroupId, TeamName, Played, Win, Draw, Loss, For, Against, Diff, Points, 
+            FormattableString sqlraw = @$"SELECT Id, GroupId, TeamId, Played, Win, Draw, Loss, For, Against, Diff, Points, 
                                             RANK() OVER (ORDER BY Points DESC, Diff DESC, `For` DESC, Against ASC) AS Rank 
-                                        FROM Standings WHERE GroupId = {groupId};";
+                                        FROM Standings WHERE GroupId = {groupId}";
 
 
-            var result = _context.Standings.FromSql(sqlraw).ToList();
+            var result = _context.Standings.FromSql(sqlraw)
+                .Join(_context.Teams,
+                        standing => standing.TeamId,
+                        team => team.Id,
+                        (standing, team) => new
+                        {
+                            Standing = standing,
+                            TeamName = team.Name,
+                        })
+                .AsNoTracking()
+                .ToDictionary(x => x.TeamName, x => x.Standing);
 
             return result;
         }

@@ -11,7 +11,7 @@ using SoccerSim.Infrastructure;
 namespace soccersim.infrastructure.Migrations
 {
     [DbContext(typeof(SoccerSimContext))]
-    [Migration("20230318125110_SetupDatabase")]
+    [Migration("20230319000123_SetupDatabase")]
     partial class SetupDatabase
     {
         /// <inheritdoc />
@@ -98,8 +98,7 @@ namespace soccersim.infrastructure.Migrations
                     b.Property<int>("Rank")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("TeamName")
-                        .IsRequired()
+                    b.Property<Guid>("TeamId")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Win")
@@ -107,7 +106,7 @@ namespace soccersim.infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("GroupId", "TeamName");
+                    b.HasIndex("GroupId", "TeamId");
 
                     b.ToTable("Standings");
                 });
@@ -143,13 +142,11 @@ namespace soccersim.infrastructure.Migrations
 
             modelBuilder.Entity("SoccerSim.Infrastructure.Models.Match", b =>
                 {
-                    b.HasOne("SoccerSim.Infrastructure.Models.Group", "Group")
+                    b.HasOne("SoccerSim.Infrastructure.Models.Group", null)
                         .WithMany("Matches")
                         .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Group");
                 });
 
             modelBuilder.Entity("SoccerSim.Infrastructure.Models.Standing", b =>

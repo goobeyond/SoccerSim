@@ -41,7 +41,7 @@ namespace SoccerSim.Infrastructure
                 .HasMany(x => x.Standings);
 
             modelBuilder.Entity<Standing>()
-                .HasIndex(standing => new { standing.GroupId, standing.TeamName });
+                .HasIndex(standing => new { standing.GroupId, standing.TeamId });
         }
 
         public DbSet<Match> Matches { get; set; }

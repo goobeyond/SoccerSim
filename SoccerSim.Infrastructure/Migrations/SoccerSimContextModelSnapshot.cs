@@ -95,8 +95,7 @@ namespace soccersim.infrastructure.Migrations
                     b.Property<int>("Rank")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("TeamName")
-                        .IsRequired()
+                    b.Property<Guid>("TeamId")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Win")
@@ -104,7 +103,7 @@ namespace soccersim.infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("GroupId", "TeamName");
+                    b.HasIndex("GroupId", "TeamId");
 
                     b.ToTable("Standings");
                 });

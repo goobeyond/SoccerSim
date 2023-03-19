@@ -10,7 +10,8 @@ namespace SoccerSim.Infrastructure.Repositories
     public interface IRepository
     {
         Task<Group?> GetGroupById(int groupId);
-        Task<IEnumerable<Standing>> GetRankedStandingsAsync(int groupId);
+        Task<Match?> GetMatchResultAsync(Guid team1, Guid team2);
+        Task<IDictionary<string, Standing>> GetRankedStandingsAsync(int groupId);
         Task<IEnumerable<Team>> GetTeamsAsync();
         Task UpdateGroupAsync(Group group);
     }

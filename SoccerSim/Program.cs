@@ -93,10 +93,10 @@ namespace SoccerSim
 
                 group.Standings = new List<Standing>()
                 {
-                    {new Standing() {TeamName = teams[0].Name, } },
-                    {new Standing() {TeamName = teams[1].Name, } },
-                    {new Standing() {TeamName = teams[2].Name, } },
-                    {new Standing() {TeamName = teams[3].Name, } }
+                    {new Standing() {TeamId = teams[0].Id, } },
+                    {new Standing() {TeamId = teams[1].Id, } },
+                    {new Standing() {TeamId = teams[2].Id, } },
+                    {new Standing() {TeamId = teams[3].Id, } }
                 };
 
                 dbContext.Add(group);

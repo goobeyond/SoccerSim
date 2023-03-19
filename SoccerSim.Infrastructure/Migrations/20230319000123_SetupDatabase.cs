@@ -54,7 +54,7 @@ namespace soccersim.infrastructure.Migrations
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     GroupId = table.Column<int>(type: "INTEGER", nullable: false),
-                    TeamName = table.Column<string>(type: "TEXT", nullable: false),
+                    TeamId = table.Column<Guid>(type: "TEXT", nullable: false),
                     Rank = table.Column<int>(type: "INTEGER", nullable: false),
                     Played = table.Column<int>(type: "INTEGER", nullable: false),
                     Win = table.Column<int>(type: "INTEGER", nullable: false),
@@ -103,9 +103,9 @@ namespace soccersim.infrastructure.Migrations
                 column: "GroupId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Standings_GroupId_TeamName",
+                name: "IX_Standings_GroupId_TeamId",
                 table: "Standings",
-                columns: new[] { "GroupId", "TeamName" });
+                columns: new[] { "GroupId", "TeamId" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Teams_GroupId",
