@@ -22,9 +22,14 @@ namespace SoccerSim.Application.Services
             return await _repository.GetGroupById(groupId);
         }
 
-        public async Task<IEnumerable<NamedStanding>> GetStandings(int groupId)
+        public async Task<IEnumerable<NamedStanding>> GetStandingsAsync(int groupId)
         {
             var rankedStanding = await _repository.GetRankedStandingsAsync(groupId);
+
+            if (rankedStanding.Count == 0) 
+            {
+                throw new Exception("Group doesn't exist.");
+            }
 
             var flattened = rankedStanding.Select(x =>
                                                 new NamedStanding() {

@@ -11,6 +11,6 @@ namespace SoccerSim.Application.Services
     public interface IGroupService
     {
         Task<Group?> GetGroupAsync(int groupId);
-        Task<IEnumerable<NamedStanding>> GetStandings(int groupId);
+        Task<IEnumerable<NamedStanding>> GetStandingsAsync(int groupId);
     }
 }

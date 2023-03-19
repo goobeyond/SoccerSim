@@ -38,7 +38,7 @@ namespace SoccerSim.Controllers
         [HttpGet("{groupId}/standings")]
         public async Task<IActionResult> GetStandings(int groupId)
         {
-            return Ok(await _teamService.GetStandings(groupId));
+            return Ok(await _teamService.GetStandingsAsync(groupId));
         }
 
         /// <summary>
