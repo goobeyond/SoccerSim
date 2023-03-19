@@ -67,10 +67,10 @@ namespace SoccerSim
 
                 dbContext.Teams.AddRange(new List<Team>()
                 {
-                    {new Team() { Name = "A", Att = 10, Def = 5, Mid = 4 } },
-                    {new Team() { Name = "B", Att = 5, Def = 3, Mid = 6 } },
-                    {new Team() { Name = "C", Att = 1, Def = 9, Mid = 2 } },
-                    {new Team() { Name = "D", Att = 7, Def = 6, Mid = 10 } },
+                    {new Team() { Name = "A", Att = 10, Mid = 4, Def = 5 } },
+                    {new Team() { Name = "B", Att = 5, Mid = 6 , Def = 3 } },
+                    {new Team() { Name = "C", Att = 1, Mid = 2 , Def = 9 } },
+                    {new Team() { Name = "D", Att = 7, Mid = 10, Def = 6 } },
                 });
 
                 dbContext.SaveChanges();

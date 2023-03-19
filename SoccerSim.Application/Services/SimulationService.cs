@@ -119,25 +119,23 @@ namespace SoccerSim.Application.Services
 
         private int CalculateScore(Team attacker, Team defender)
         {
-            //var random = new Random((int)DateTime.Now.Ticks);
-            //int score = 0;
+            var random = new Random((int)DateTime.Now.Ticks);
+            int score = 0;
 
-            //// from a max difference of 10 to -10, we have a range of 20 so we divide by 20
-            //// to convert the chance to integer, we multiply by 10, so in the end, we divide by 2
-            //var chanceToScore = (10 + attacker.Att - defender.Def) / 2; 
+            // from a max difference of 10 to -10, we have a range of 20 so we divide by 20
+            // to convert the chance to integer, we multiply by 10, so in the end, we divide by 2
+            var chanceToScore = (10 + attacker.Att - defender.Def) / 2;
 
-            //for (int i = 0; i < attacker.Mid; i++) // we consider the Mid score as the number of attempts on goal
-            //{
-            //    var outcome = random.Next(0, 11);
-            //    if (outcome <= chanceToScore)
-            //    {
-            //        score++;
-            //    }
-            //}
+            for (int i = 0; i < attacker.Mid; i++) // we consider the Mid score as the number of attempts on goal
+            {
+                var outcome = random.Next(0, 11);
+                if (outcome <= chanceToScore)
+                {
+                    score++;
+                }
+            }
 
-            //return score;
-
-            return 1;
+            return score;
         }
 
         private async Task<Group> GetGroup(int groupId)
